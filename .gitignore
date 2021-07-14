@@ -4,3 +4,5 @@
 
 /.vs
 /packages/StyleCop.Analyzers.1.1.118
+/Events/obj
+/Events/bin
