@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Exiled.Events.EventArgs;
+using Mistaken.Events.EventArgs;
 
 namespace Mistaken.Events.Handlers
 {

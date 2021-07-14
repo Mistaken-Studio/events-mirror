@@ -4,13 +4,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Mistaken.API;
 
-namespace Mistaken.API
+namespace Mistaken.Events
 {
     /// <inheritdoc/>
     public class Config : IAutoUpdatableConfig
