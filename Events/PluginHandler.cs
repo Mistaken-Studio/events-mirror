@@ -17,7 +17,7 @@ namespace Mistaken.Events
         public override string Author => "Mistaken Devs";
 
         /// <inheritdoc/>
-        public override string Name => "MistakenEvents";
+        public override string Name => "Mistaken Events";
 
         /// <inheritdoc/>
         public override string Prefix => "MEVENTS";
