@@ -27,6 +27,6 @@ namespace Mistaken.Events
         public string AutoUpdateToken { get; set; }
 
         /// <inheritdoc/>
-        public bool IsEnabled { get; set; }
+        public bool IsEnabled { get; set; } = true;
     }
 }
