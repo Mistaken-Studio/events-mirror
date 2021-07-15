@@ -68,6 +68,7 @@
     <Compile Include="Patches\SCP079RecontainPatch.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".editorconfig" />
     <None Include="packages.config" />
     <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
