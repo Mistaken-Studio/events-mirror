@@ -17,10 +17,10 @@ namespace Mistaken.Events
         public override string Author => "Mistaken Devs";
 
         /// <inheritdoc/>
-        public override string Name => "Mistaken Events";
+        public override string Name => "CustomEvents";
 
         /// <inheritdoc/>
-        public override string Prefix => "MEVENTS";
+        public override string Prefix => "MCEVENTS";
 
         /// <inheritdoc/>
         public override PluginPriority Priority => PluginPriority.High;
