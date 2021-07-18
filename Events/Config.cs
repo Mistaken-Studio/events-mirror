@@ -16,12 +16,13 @@ namespace Mistaken.Events
         public bool IsEnabled { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets a value indicating whether debugs should be displayed.
+        /// Gets or sets a value indicating whether debug should be displayed.
         /// </summary>
-        [Description("If true then debugs will be displayed")]
+        [Description("If true then debug will be displayed")]
         public bool VerbouseOutput { get; set; }
 
         /// <inheritdoc/>
-        public AutoUpdateConfig AutoUpdateConfig { get; set; }
+        [Description("Auto Update Settings")]
+        public System.Collections.Generic.Dictionary<string, string> AutoUpdateConfig { get; set; }
     }
 }
