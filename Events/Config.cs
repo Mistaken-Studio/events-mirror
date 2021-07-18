@@ -4,29 +4,19 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Mistaken.API;
+using Mistaken.Updater.Config;
 
 namespace Mistaken.Events
 {
     /// <inheritdoc/>
     public class Config : IAutoUpdatableConfig
     {
-        /// <inheritdoc/>
         public bool VerbouseOutput { get; set; }
 
         /// <inheritdoc/>
-        public string AutoUpdateUrl { get; set; }
-
-        /// <inheritdoc/>
-        public AutoUpdateType AutoUpdateType { get; set; }
-
-        /// <inheritdoc/>
-        public string AutoUpdateLogin { get; set; }
-
-        /// <inheritdoc/>
-        public string AutoUpdateToken { get; set; }
-
-        /// <inheritdoc/>
         public bool IsEnabled { get; set; } = true;
+
+        /// <inheritdoc/>
+        public AutoUpdateConfig AutoUpdateConfig { get; set; }
     }
 }
