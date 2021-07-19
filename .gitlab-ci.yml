@@ -23,11 +23,15 @@ build-plugins:
   tags:
     - Windows
   script:
+    - git clone https://oauth2:$GIT_KEY@git.mistaken.pl/scp-sl/dependencies.git
     - 'nuget restore'
-    - 'msbuild Events.sln /p:ReferencePath="$env:MISTAKEN_REFERENCES" /p:CompanyName=Mistaken /p:OutputPath="build"'
+    - $origdeps = $env:MISTAKEN_REFERENCES
+    - $env:MISTAKEN_REFERENCES = (Get-Item .).FullName + "\dependencies"
+    - 'msbuild $CI_PROJECT_NAME.sln /p:ReferencePath="$env:MISTAKEN_REFERENCES" /p:CompanyName=Mistaken /p:OutputPath="build"'
+    - $env:MISTAKEN_REFERENCES = $origdeps
   artifacts:
     paths:
-      - Events\build\Mistaken.Events.dll
+      - $CI_PROJECT_NAME\build\$DLL_NAME
 
 test-plugins:
   needs: [build-plugins]
@@ -51,11 +55,16 @@ build-plugins-publish:
   tags:
     - Windows
   script:
+    - git clone https://oauth2:$GIT_KEY@git.mistaken.pl/scp-sl/dependencies.git
     - 'nuget restore'
-    - 'msbuild Events.sln /p:ReferencePath="$env:MISTAKEN_REFERENCES" /p:CompanyName=Mistaken /p:OutputPath="build"'
+    - $origdeps = $env:MISTAKEN_REFERENCES
+    - $env:MISTAKEN_REFERENCES = (Get-Item .).FullName + "\dependencies"
+    - '.\dependencies\version.ps1'
+    - 'msbuild $CI_PROJECT_NAME.sln /p:ReferencePath="$env:MISTAKEN_REFERENCES" /p:CompanyName=Mistaken /p:OutputPath="build" /p:Version=$wersja'
+    - $env:MISTAKEN_REFERENCES = $origdeps
   artifacts:
     paths:
-      - Events\build\Mistaken.Events.dll
+      - $CI_PROJECT_NAME\build\$DLL_NAME
 
 test-plugins-publish:
   needs: [build-plugins-publish]
@@ -81,11 +90,22 @@ publish-plugins:
   dependencies:
     - build-plugins-publish
   script:
-    - 'curl -InFile "Events\build\Mistaken.Events.dll" -Method "Put" -H @{"PRIVATE-TOKEN"= "$API_KEY"} "https://git.mistaken.pl/api/v4/projects/scp-sl%2Fevents/packages/generic/plugins/$wersja/Mistaken.Events.dll" -UseBasicParsing'
-    - $env:asset = "{`"name`":`"Mistaken.Events.dll`",`"url`":`"https://git.mistaken.pl/api/v4/projects/scp-sl%2Fevents/packages/generic/plugins/$wersja/Mistaken.Events.dll`"}"
+    - 'curl -InFile "$CI_PROJECT_NAME\build\$DLL_NAME" -Method "Put" -H @{"PRIVATE-TOKEN"= "$API_KEY"} "https://git.mistaken.pl/api/v4/projects/scp-sl%2F$CI_PROJECT_NAME/packages/generic/plugins/$wersja/$DLL_NAME" -UseBasicParsing'
+    - $env:asset = "{`"name`":`"$DLL_NAME`",`"url`":`"https://git.mistaken.pl/api/v4/projects/scp-sl%2F$CI_PROJECT_NAME/packages/generic/plugins/$wersja/$DLL_NAME`"}"
     - $env:assetjson = $env:asset | ConvertTo-Json
     - C:\GitLab\Release-CLI\bin\release-cli create --name $wersja --description "Release $wersja" --tag-name $wersja --assets-link=$env:assetjson
-    - git remote set-url origin https://oauth2:$GIT_KEY@git.mistaken.pl/scp-sl/events.git
+    - git clone https://oauth2:$GIT_KEY@git.mistaken.pl/scp-sl/dependencies.git
+    - cd dependencies
+    - cp ..\$CI_PROJECT_NAME\build\$DLL_NAME $DLL_NAME
+    - git config commit.gpgsign false
+    - git config user.email "ci@git.mistaken.pl"
+    - git config user.name "Gitlab-CI"
+    - git add $DLL_NAME
+    - git commit -m "Update $DLL_NAME"
+    - git push
+    - cd ..
+    - rm -r -force dependencies
+    - git remote set-url origin https://oauth2:$GIT_KEY@git.mistaken.pl/scp-sl/$CI_PROJECT_NAME.git
     - git config commit.gpgsign false
     - git config user.email "ci@git.mistaken.pl"
     - git config user.name "Gitlab-CI"
