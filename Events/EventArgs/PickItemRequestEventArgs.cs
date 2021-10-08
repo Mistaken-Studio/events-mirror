@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Exiled.API.Features.Items;
+
 namespace Mistaken.Events.EventArgs
 {
     /// <inheritdoc/>

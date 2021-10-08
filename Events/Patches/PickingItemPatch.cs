@@ -5,9 +5,9 @@
 // -----------------------------------------------------------------------
 
 using HarmonyLib;
+using InventorySystem.Searching;
 using Mistaken.Events.EventArgs;
 using Mistaken.Events.Handlers;
-using Searching;
 
 namespace Mistaken.Events.Patches
 {
@@ -24,9 +24,7 @@ namespace Mistaken.Events.Patches
                 return true;
             if (__instance?.Hub == null)
                 return true;
-            if (__instance?.TargetPickup.ItemId == null)
-                return true;
-            PickItemRequestEventArgs data = new PickItemRequestEventArgs(Exiled.API.Features.Player.Get(__instance.Hub), __instance.TargetPickup);
+            PickItemRequestEventArgs data = new PickItemRequestEventArgs(Exiled.API.Features.Player.Get(__instance.Hub), Exiled.API.Features.Items.Pickup.Get(__instance.TargetPickup));
             CustomEvents.InvokeOnRequestPickItem(ref data);
             if (!data.IsAllowed)
             {
