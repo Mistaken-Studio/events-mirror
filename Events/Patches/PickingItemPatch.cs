@@ -11,7 +11,7 @@ using Mistaken.Events.Handlers;
 
 namespace Mistaken.Events.Patches
 {
-    [HarmonyPatch(typeof(ItemSearchCompletor), "ValidateAny")]
+    [HarmonyPatch(typeof(ItemSearchCompletor), nameof(ItemSearchCompletor.ValidateAny))]
     internal static class PickingItemPatch
     {
 #pragma warning disable SA1313 // Parameter names should begin with lower-case letter
