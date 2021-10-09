@@ -4,7 +4,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Exiled.API.Features;
+using Mistaken.API;
 using Mistaken.Events.EventArgs;
+using UnityEngine;
 
 namespace Mistaken.Events.Handlers
 {
@@ -33,7 +36,15 @@ namespace Mistaken.Events.Handlers
         /// </summary>
         public static void InvokeOnRequestPickItem(ref PickItemRequestEventArgs ev)
         {
-            OnRequestPickItem?.Invoke(ev);
+            try
+            {
+                OnRequestPickItem?.Invoke(ev);
+            }
+            catch (System.Exception ex)
+            {
+                Log.Error(ex.Message);
+                Log.Error(ex.StackTrace);
+            }
         }
 
         /// <summary>
@@ -41,7 +52,15 @@ namespace Mistaken.Events.Handlers
         /// </summary>
         public static void InvokeOnBroadcast(ref BroadcastEventArgs ev)
         {
-            OnBroadcast?.Invoke(ev);
+            try
+            {
+                OnBroadcast?.Invoke(ev);
+            }
+            catch (System.Exception ex)
+            {
+                Log.Error(ex.Message);
+                Log.Error(ex.StackTrace);
+            }
         }
 
         /// <summary>
@@ -49,7 +68,15 @@ namespace Mistaken.Events.Handlers
         /// </summary>
         public static void InvokeOnFirstTimeJoined(FirstTimeJoinedEventArgs ev)
         {
-            OnFirstTimeJoined?.Invoke(ev);
+            try
+            {
+                OnFirstTimeJoined?.Invoke(ev);
+            }
+            catch (System.Exception ex)
+            {
+                Log.Error(ex.Message);
+                Log.Error(ex.StackTrace);
+            }
         }
 
         /// <summary>
@@ -58,19 +85,32 @@ namespace Mistaken.Events.Handlers
         public static class SCP079
         {
             /// <summary>
-            /// Gets time left to end of recontainment or -1 if not in proggres.
-            /// </summary>
-            public static int TimeToRecontainment => Patches.SCP079RecontainPatch.SecondsLeft;
-
-            /// <summary>
             /// Gets a value indicating whether is recontainment in proggres.
             /// </summary>
-            public static bool IsBeingRecontained => Patches.SCP079RecontainPatch.Recontaining;
+            public static bool IsBeingRecontained => Recontainer._prevEngaged >= 3;
 
             /// <summary>
-            /// Gets a value indicating whether recontainment is paused.
+            /// Gets a value indicating whether recontainment has finished.
             /// </summary>
-            public static bool IsRecontainmentPaused => Patches.SCP079RecontainPatch.Waiting;
+            public static bool IsRecontained => Recontainer._alreadyRecontained;
+
+            private static int roundId = -1;
+
+            private static Recontainer079 recontainer;
+
+            private static Recontainer079 Recontainer
+            {
+                get
+                {
+                    if (RoundPlus.RoundId != roundId)
+                    {
+                        recontainer = GameObject.FindObjectOfType<Recontainer079>();
+                        roundId = RoundPlus.RoundId;
+                    }
+
+                    return recontainer;
+                }
+            }
         }
     }
 }
