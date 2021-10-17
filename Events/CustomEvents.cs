@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using Exiled.API.Features;
+using Exiled.Events.Extensions;
 using Mistaken.API;
 using Mistaken.Events.EventArgs;
 using UnityEngine;
@@ -17,34 +18,36 @@ namespace Mistaken.Events.Handlers
     public static class CustomEvents
     {
         /// <summary>
-        /// Event called when requesting Item Pickup
+        /// Event called when requesting Item Pickup.
         /// </summary>
         public static event Exiled.Events.Events.CustomEventHandler<PickItemRequestEventArgs> OnRequestPickItem;
 
         /// <summary>
-        /// Event called when broadcast was sent
+        /// Event called when broadcast was sent.
         /// </summary>
         public static event Exiled.Events.Events.CustomEventHandler<BroadcastEventArgs> OnBroadcast;
 
         /// <summary>
-        /// Event called when player joins first time in row
+        /// Event called when player joins first time in a session.
         /// </summary>
         public static event Exiled.Events.Events.CustomEventHandler<FirstTimeJoinedEventArgs> OnFirstTimeJoined;
+
+        /// <summary>
+        /// Event called when player is changing attachments.
+        /// </summary>
+        public static event Exiled.Events.Events.CustomEventHandler<ChangingAttachmentsEventArgs> OnChangingAttachments;
+
+        /// <summary>
+        /// Event called when player is changing attachments.
+        /// </summary>
+        public static event Exiled.Events.Events.CustomEventHandler<UnloadingFirearmEventArgs> OnUnloadingFirearm;
 
         /// <summary>
         /// Invokes <see cref="OnRequestPickItem"/> with <paramref name="ev"/> as parameter.
         /// </summary>
         public static void InvokeOnRequestPickItem(ref PickItemRequestEventArgs ev)
         {
-            try
-            {
-                OnRequestPickItem?.Invoke(ev);
-            }
-            catch (System.Exception ex)
-            {
-                Log.Error(ex.Message);
-                Log.Error(ex.StackTrace);
-            }
+            OnRequestPickItem.InvokeSafely(ev);
         }
 
         /// <summary>
@@ -52,31 +55,31 @@ namespace Mistaken.Events.Handlers
         /// </summary>
         public static void InvokeOnBroadcast(ref BroadcastEventArgs ev)
         {
-            try
-            {
-                OnBroadcast?.Invoke(ev);
-            }
-            catch (System.Exception ex)
-            {
-                Log.Error(ex.Message);
-                Log.Error(ex.StackTrace);
-            }
+            OnBroadcast.InvokeSafely(ev);
         }
 
         /// <summary>
-        /// Invokes <see cref="OnRequestPickItem"/> with <paramref name="ev"/> as parameter.
+        /// Invokes <see cref="OnFirstTimeJoined"/> with <paramref name="ev"/> as parameter.
         /// </summary>
         public static void InvokeOnFirstTimeJoined(FirstTimeJoinedEventArgs ev)
         {
-            try
-            {
-                OnFirstTimeJoined?.Invoke(ev);
-            }
-            catch (System.Exception ex)
-            {
-                Log.Error(ex.Message);
-                Log.Error(ex.StackTrace);
-            }
+            OnFirstTimeJoined.InvokeSafely(ev);
+        }
+
+        /// <summary>
+        /// Invokes <see cref="OnChangingAttachments"/> with <paramref name="ev"/> as parameter.
+        /// </summary>
+        public static void InvokeOnChangingAttachments(ChangingAttachmentsEventArgs ev)
+        {
+            OnChangingAttachments.InvokeSafely(ev);
+        }
+
+        /// <summary>
+        /// Invokes <see cref="OnUnloadingFirearm"/> with <paramref name="ev"/> as parameter.
+        /// </summary>
+        public static void InvokeOnUnloadingFirearm(UnloadingFirearmEventArgs ev)
+        {
+            OnUnloadingFirearm.InvokeSafely(ev);
         }
 
         /// <summary>

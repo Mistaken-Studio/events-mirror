@@ -60,10 +60,14 @@
     <Compile Include="Config.cs" />
     <Compile Include="CustomEvents.cs" />
     <Compile Include="EventArgs\FirstTimeJoinedEventArgs.cs" />
+    <Compile Include="EventArgs\ChangingAttachmentsEventArgs.cs" />
     <Compile Include="EventArgs\PickItemRequestEventArgs.cs" />
+    <Compile Include="EventArgs\UnloadingFirearmEventArgs.cs" />
     <Compile Include="Patches\BroadcastRpcAddElementPatch.cs" />
     <Compile Include="Patches\BroadcastTargetAddElementPatch.cs" />
     <Compile Include="Patches\BroadcastTargetReplyPatch.cs" />
+    <Compile Include="Patches\UnloadingFirearmPatch.cs" />
+    <Compile Include="Patches\ChangingAttachmentsPatch.cs" />
     <Compile Include="Patches\PickingItemPatch.cs" />
     <Compile Include="PluginHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
