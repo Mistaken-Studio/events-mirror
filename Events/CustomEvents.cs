@@ -20,66 +20,90 @@ namespace Mistaken.Events.Handlers
         /// <summary>
         /// Event called when requesting Item Pickup.
         /// </summary>
-        public static event Exiled.Events.Events.CustomEventHandler<PickItemRequestEventArgs> OnRequestPickItem;
+        public static event Exiled.Events.Events.CustomEventHandler<PickItemRequestEventArgs> RequestPickItem;
+
+        /// <inheritdoc cref="RequestPickItem"/>
+        [System.Obsolete("Use RequestPickItem", true)]
+        public static event Exiled.Events.Events.CustomEventHandler<PickItemRequestEventArgs> OnRequestPickItem
+        {
+            add => RequestPickItem += value;
+            remove => RequestPickItem -= value;
+        }
 
         /// <summary>
         /// Event called when broadcast was sent.
         /// </summary>
-        public static event Exiled.Events.Events.CustomEventHandler<BroadcastEventArgs> OnBroadcast;
+        public static event Exiled.Events.Events.CustomEventHandler<BroadcastEventArgs> Broadcast;
+
+        /// <inheritdoc cref="Broadcast"/>
+        [System.Obsolete("Use Broadcast", true)]
+        public static event Exiled.Events.Events.CustomEventHandler<BroadcastEventArgs> OnBroadcast
+        {
+            add => Broadcast += value;
+            remove => Broadcast -= value;
+        }
 
         /// <summary>
         /// Event called when player joins first time in a session.
         /// </summary>
-        public static event Exiled.Events.Events.CustomEventHandler<FirstTimeJoinedEventArgs> OnFirstTimeJoined;
+        public static event Exiled.Events.Events.CustomEventHandler<FirstTimeJoinedEventArgs> FirstTimeJoined;
+
+        /// <inheritdoc cref="FirstTimeJoined"/>
+        [System.Obsolete("Use FirstTimeJoined", true)]
+        public static event Exiled.Events.Events.CustomEventHandler<FirstTimeJoinedEventArgs> OnFirstTimeJoined
+        {
+            add => FirstTimeJoined += value;
+            remove => FirstTimeJoined -= value;
+        }
 
         /// <summary>
         /// Event called when player is changing attachments.
         /// </summary>
-        public static event Exiled.Events.Events.CustomEventHandler<ChangingAttachmentsEventArgs> OnChangingAttachments;
+        public static event Exiled.Events.Events.CustomEventHandler<ChangingAttachmentsEventArgs> ChangingAttachments;
 
         /// <summary>
         /// Event called when player is changing attachments.
         /// </summary>
-        public static event Exiled.Events.Events.CustomEventHandler<UnloadingFirearmEventArgs> OnUnloadingFirearm;
+        public static event Exiled.Events.Events.CustomEventHandler<UnloadingFirearmEventArgs> UnloadingFirearm;
 
         /// <summary>
-        /// Invokes <see cref="OnRequestPickItem"/> with <paramref name="ev"/> as parameter.
+        /// Invokes <see cref="RequestPickItem"/> with <paramref name="ev"/> as parameter.
         /// </summary>
         public static void InvokeOnRequestPickItem(ref PickItemRequestEventArgs ev)
         {
-            OnRequestPickItem.InvokeSafely(ev);
+            RequestPickItem.InvokeSafely(ev);
         }
 
         /// <summary>
-        /// Invokes <see cref="OnBroadcast"/> with <paramref name="ev"/> as parameter.
+        /// Invokes <see cref="Broadcast"/> with <paramref name="ev"/> as parameter.
         /// </summary>
         public static void InvokeOnBroadcast(ref BroadcastEventArgs ev)
         {
-            OnBroadcast.InvokeSafely(ev);
+            Broadcast.InvokeSafely(ev);
         }
 
         /// <summary>
-        /// Invokes <see cref="OnFirstTimeJoined"/> with <paramref name="ev"/> as parameter.
+        /// Invokes <see cref="FirstTimeJoined"/> with <paramref name="ev"/> as parameter.
         /// </summary>
         public static void InvokeOnFirstTimeJoined(FirstTimeJoinedEventArgs ev)
         {
-            OnFirstTimeJoined.InvokeSafely(ev);
+            FirstTimeJoined.InvokeSafely(ev);
         }
 
         /// <summary>
-        /// Invokes <see cref="OnChangingAttachments"/> with <paramref name="ev"/> as parameter.
+        /// Invokes <see cref="ChangingAttachments"/> with <paramref name="ev"/> as parameter.
         /// </summary>
         public static void InvokeOnChangingAttachments(ChangingAttachmentsEventArgs ev)
         {
-            OnChangingAttachments.InvokeSafely(ev);
+            ChangingAttachments.InvokeSafely(ev);
         }
 
         /// <summary>
-        /// Invokes <see cref="OnUnloadingFirearm"/> with <paramref name="ev"/> as parameter.
+        /// Invokes <see cref="UnloadingFirearm"/> with <paramref name="ev"/> as parameter.
         /// </summary>
         public static void InvokeOnUnloadingFirearm(UnloadingFirearmEventArgs ev)
         {
-            OnUnloadingFirearm.InvokeSafely(ev);
+            UnloadingFirearm.InvokeSafely(ev);
         }
 
         /// <summary>
