@@ -36,7 +36,7 @@ namespace Mistaken.Events.Patches
                             admin = tmp.Last();
                         var contentWithoutAdmin = tmp.Length == 1 ? content : content.Substring(0, content.Length - (admin.Length + 1));
                         var ev = new BroadcastEventArgs(Broadcast.BroadcastFlags.AdminChat, contentWithoutAdmin, admin, Targets[content].ToArray());
-                        CustomEvents.InvokeOnBroadcast(ref ev);
+                        CustomEvents.InvokeBroadcast(ref ev);
 
                         NorthwoodLib.Pools.ListPool<string>.Shared.Return(Targets[content]);
                         Targets.Remove(content);

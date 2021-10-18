@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="UnloadingFirearmPatch.cs" company="Mistaken">
+// <copyright file="AimingPatch.cs" company="Mistaken">
 // Copyright (c) Mistaken. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -14,11 +14,11 @@ using Mistaken.Events.EventArgs;
 namespace Mistaken.Events.Patches
 {
     [HarmonyPatch(typeof(FirearmBasicMessagesHandler), nameof(FirearmBasicMessagesHandler.ServerRequestReceived))]
-    internal static class UnloadingFirearmPatch
+    internal static class AimingPatch
     {
         public static bool Prefix(NetworkConnection conn, RequestMessage msg)
         {
-            if (msg.Request != RequestType.Unload)
+            if (msg.Request != RequestType.AdsIn && msg.Request != RequestType.AdsOut)
                 return true;
 
             ReferenceHub referenceHub;
@@ -33,15 +33,17 @@ namespace Mistaken.Events.Patches
 
             var player = Player.Get(referenceHub);
             var item = (Exiled.API.Features.Items.Firearm)Exiled.API.Features.Items.Item.Get(firearm);
-            var ev = new UnloadingFirearmEventArgs(player, item);
+            var ev = new AimingEventArgs(player, item, msg.Request == RequestType.AdsIn);
 
-            Handlers.CustomEvents.InvokeUnloadingFirearm(ev);
+            Handlers.CustomEvents.InvokeAiming(ev);
 
             if (!ev.IsAllowed)
                 return false;
 
-            if (firearm.AmmoManagerModule.ServerTryUnload())
-                conn.Send(new RequestMessage(msg.Serial, RequestType.Unload), 0);
+            if (msg.Request == RequestType.AdsIn)
+                firearm.AdsModule.ServerAds = true;
+            else
+                firearm.AdsModule.ServerAds = false;
 
             return false;
         }

@@ -35,7 +35,7 @@ namespace Mistaken.Events
             if (!JoinedButNotLeft.Contains(ev.Player.UserId))
             {
                 JoinedButNotLeft.Add(ev.Player.UserId);
-                Handlers.CustomEvents.InvokeOnFirstTimeJoined(new EventArgs.FirstTimeJoinedEventArgs(ev.Player));
+                Handlers.CustomEvents.InvokeFirstTimeJoined(new EventArgs.FirstTimeJoinedEventArgs(ev.Player));
             }
         }
     }

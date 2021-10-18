@@ -4,7 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Exiled.API.Features;
 using Exiled.Events.Extensions;
 using Mistaken.API;
 using Mistaken.Events.EventArgs;
@@ -62,14 +61,29 @@ namespace Mistaken.Events.Handlers
         public static event Exiled.Events.Events.CustomEventHandler<ChangingAttachmentsEventArgs> ChangingAttachments;
 
         /// <summary>
-        /// Event called when player is changing attachments.
+        /// Event called when player is unloading firearm.
         /// </summary>
         public static event Exiled.Events.Events.CustomEventHandler<UnloadingFirearmEventArgs> UnloadingFirearm;
 
         /// <summary>
+        /// Event called when player is sending RA command.
+        /// </summary>
+        public static event Exiled.Events.Events.CustomEventHandler<SendingCommandEventArgs> SendingCommand;
+
+        /// <summary>
+        /// Event called when player is aiming-in or aiming-out.
+        /// </summary>
+        public static event Exiled.Events.Events.CustomEventHandler<AimingEventArgs> Aiming;
+
+        /// <summary>
+        /// Event called when player is changing spectated player.
+        /// </summary>
+        public static event Exiled.Events.Events.CustomEventHandler<ChangingSpectatedPlayerEventArgs> ChangingSpectatedPlayer;
+
+        /// <summary>
         /// Invokes <see cref="RequestPickItem"/> with <paramref name="ev"/> as parameter.
         /// </summary>
-        public static void InvokeOnRequestPickItem(ref PickItemRequestEventArgs ev)
+        public static void InvokeRequestPickItem(ref PickItemRequestEventArgs ev)
         {
             RequestPickItem.InvokeSafely(ev);
         }
@@ -77,7 +91,7 @@ namespace Mistaken.Events.Handlers
         /// <summary>
         /// Invokes <see cref="Broadcast"/> with <paramref name="ev"/> as parameter.
         /// </summary>
-        public static void InvokeOnBroadcast(ref BroadcastEventArgs ev)
+        public static void InvokeBroadcast(ref BroadcastEventArgs ev)
         {
             Broadcast.InvokeSafely(ev);
         }
@@ -85,7 +99,7 @@ namespace Mistaken.Events.Handlers
         /// <summary>
         /// Invokes <see cref="FirstTimeJoined"/> with <paramref name="ev"/> as parameter.
         /// </summary>
-        public static void InvokeOnFirstTimeJoined(FirstTimeJoinedEventArgs ev)
+        public static void InvokeFirstTimeJoined(FirstTimeJoinedEventArgs ev)
         {
             FirstTimeJoined.InvokeSafely(ev);
         }
@@ -93,7 +107,7 @@ namespace Mistaken.Events.Handlers
         /// <summary>
         /// Invokes <see cref="ChangingAttachments"/> with <paramref name="ev"/> as parameter.
         /// </summary>
-        public static void InvokeOnChangingAttachments(ChangingAttachmentsEventArgs ev)
+        public static void InvokeChangingAttachments(ChangingAttachmentsEventArgs ev)
         {
             ChangingAttachments.InvokeSafely(ev);
         }
@@ -101,9 +115,33 @@ namespace Mistaken.Events.Handlers
         /// <summary>
         /// Invokes <see cref="UnloadingFirearm"/> with <paramref name="ev"/> as parameter.
         /// </summary>
-        public static void InvokeOnUnloadingFirearm(UnloadingFirearmEventArgs ev)
+        public static void InvokeUnloadingFirearm(UnloadingFirearmEventArgs ev)
         {
             UnloadingFirearm.InvokeSafely(ev);
+        }
+
+        /// <summary>
+        /// Invokes <see cref="SendingCommand"/> with <paramref name="ev"/> as parameter.
+        /// </summary>
+        public static void InvokeSendingCommand(SendingCommandEventArgs ev)
+        {
+            SendingCommand.InvokeSafely(ev);
+        }
+
+        /// <summary>
+        /// Invokes <see cref="Aiming"/> with <paramref name="ev"/> as parameter.
+        /// </summary>
+        public static void InvokeAiming(AimingEventArgs ev)
+        {
+            Aiming.InvokeSafely(ev);
+        }
+
+        /// <summary>
+        /// Invokes <see cref="ChangingSpectatedPlayer"/> with <paramref name="ev"/> as parameter.
+        /// </summary>
+        public static void InvokeChangingSpectatedPlayer(ChangingSpectatedPlayerEventArgs ev)
+        {
+            ChangingSpectatedPlayer.InvokeSafely(ev);
         }
 
         /// <summary>
