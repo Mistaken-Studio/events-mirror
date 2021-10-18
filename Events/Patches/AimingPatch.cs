@@ -37,9 +37,6 @@ namespace Mistaken.Events.Patches
 
             Handlers.CustomEvents.InvokeAiming(ev);
 
-            if (!ev.IsAllowed)
-                return false;
-
             if (msg.Request == RequestType.AdsIn)
                 firearm.AdsModule.ServerAds = true;
             else

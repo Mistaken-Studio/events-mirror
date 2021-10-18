@@ -20,7 +20,6 @@ namespace Mistaken.Events.EventArgs
             this.Player = player;
             this.Firearm = firearm;
             this.Aiming = aiming;
-            this.IsAllowed = true;
         }
 
         /// <summary>
@@ -37,10 +36,5 @@ namespace Mistaken.Events.EventArgs
         /// Gets a value indicating whether player is aiming or not.
         /// </summary>
         public bool Aiming { get; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether if unloading is allowed.
-        /// </summary>
-        public bool IsAllowed { get; set; }
     }
 }
