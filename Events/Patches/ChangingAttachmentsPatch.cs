@@ -47,6 +47,8 @@ namespace Mistaken.Events.Patches
                 var item = (Exiled.API.Features.Items.Firearm)Exiled.API.Features.Items.Item.Get(firearm);
                 var ev = new ChangingAttachmentsEventArgs(player, item, msg.AttachmentsCode);
 
+                Handlers.CustomEvents.InvokeOnChangingAttachments(ev);
+
                 if (!ev.IsAllowed)
                     return false;
 

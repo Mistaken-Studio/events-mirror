@@ -39,6 +39,8 @@ namespace Mistaken.Events.Patches
             var item = (Exiled.API.Features.Items.Firearm)Exiled.API.Features.Items.Item.Get(firearm);
             var ev = new UnloadingFirearmEventArgs(player, item);
 
+            Handlers.CustomEvents.InvokeOnUnloadingFirearm(ev);
+
             if (!ev.IsAllowed)
                 return false;
 
