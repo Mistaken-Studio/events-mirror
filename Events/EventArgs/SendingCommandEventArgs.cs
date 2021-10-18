@@ -18,8 +18,9 @@ namespace Mistaken.Events.EventArgs
         public SendingCommandEventArgs(Exiled.API.Features.Player admin, string query)
         {
             this.Admin = admin;
-            this.Arguments = query.Split(' ').Skip(1).ToArray();
+            this.Arguments = query.Split(' ');
             this.Command = this.Arguments[0];
+            this.Arguments = this.Arguments.Skip(1).ToArray();
             this.IsAllowed = true;
         }
 
