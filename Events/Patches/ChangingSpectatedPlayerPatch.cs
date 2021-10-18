@@ -21,6 +21,9 @@ namespace Mistaken.Events.Patches
                 return;
 
             var spectator = Player.Get(__instance._hub);
+            if (spectator == null)
+                return;
+
             var oldPlayer = Player.Get(__instance.CurrentSpectatedPlayer);
             var newPlayer = Player.Get(value);
             var ev = new ChangingSpectatedPlayerEventArgs(spectator, oldPlayer, newPlayer);
