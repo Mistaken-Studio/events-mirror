@@ -15,9 +15,9 @@ namespace Mistaken.Events.EventArgs
         /// Initializes a new instance of the <see cref="SendingCommandEventArgs"/> class.
         /// Constructor.
         /// </summary>
-        public SendingCommandEventArgs(Exiled.API.Features.Player player, string query)
+        public SendingCommandEventArgs(Exiled.API.Features.Player admin, string query)
         {
-            this.Player = player;
+            this.Admin = admin;
             this.Arguments = query.Split(' ').Skip(1).ToArray();
             this.Command = this.Arguments[0];
             this.IsAllowed = true;
@@ -26,7 +26,7 @@ namespace Mistaken.Events.EventArgs
         /// <summary>
         /// Gets player that unloades firearm.
         /// </summary>
-        public Exiled.API.Features.Player Player { get; }
+        public Exiled.API.Features.Player Admin { get; }
 
         /// <summary>
         /// Gets sent command.
