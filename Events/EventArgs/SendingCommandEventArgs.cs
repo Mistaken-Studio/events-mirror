@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Linq;
+using Exiled.API.Features;
 
 namespace Mistaken.Events.EventArgs
 {
@@ -15,13 +16,13 @@ namespace Mistaken.Events.EventArgs
         /// Initializes a new instance of the <see cref="SendingCommandEventArgs"/> class.
         /// Constructor.
         /// </summary>
-        public SendingCommandEventArgs(Exiled.API.Features.Player admin, string query)
+        public SendingCommandEventArgs(Player admin, string query, bool isAllowed = true)
         {
-            this.Admin = admin;
+            this.Admin = admin ?? Server.Host;
             this.Arguments = query.Split(' ');
             this.Command = this.Arguments[0];
             this.Arguments = this.Arguments.Skip(1).ToArray();
-            this.IsAllowed = true;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

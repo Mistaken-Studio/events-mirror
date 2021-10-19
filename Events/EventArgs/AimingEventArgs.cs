@@ -15,11 +15,11 @@ namespace Mistaken.Events.EventArgs
         /// Initializes a new instance of the <see cref="AimingEventArgs"/> class.
         /// Constructor.
         /// </summary>
-        public AimingEventArgs(Exiled.API.Features.Player player, Firearm firearm, bool aiming)
+        public AimingEventArgs(Exiled.API.Features.Player player, bool aimingIn)
         {
             this.Player = player;
-            this.Firearm = firearm;
-            this.Aiming = aiming;
+            this.Firearm = player.CurrentItem as Exiled.API.Features.Items.Firearm;
+            this.AimingIn = aimingIn;
         }
 
         /// <summary>
@@ -33,8 +33,8 @@ namespace Mistaken.Events.EventArgs
         public Firearm Firearm { get; }
 
         /// <summary>
-        /// Gets a value indicating whether player is aiming or not.
+        /// Gets a value indicating whether player is aiming in or out.
         /// </summary>
-        public bool Aiming { get; }
+        public bool AimingIn { get; }
     }
 }

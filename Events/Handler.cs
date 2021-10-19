@@ -21,11 +21,13 @@ namespace Mistaken.Events
         public override void OnEnable()
         {
             Exiled.Events.Handlers.Player.Verified += this.Handle<Exiled.Events.EventArgs.VerifiedEventArgs>((ev) => this.Player_Verified(ev));
+            Exiled.Events.Handlers.Player.Left += this.Handle<Exiled.Events.EventArgs.LeftEventArgs>((ev) => this.Player_Left(ev));
         }
 
         public override void OnDisable()
         {
             Exiled.Events.Handlers.Player.Verified -= this.Handle<Exiled.Events.EventArgs.VerifiedEventArgs>((ev) => this.Player_Verified(ev));
+            Exiled.Events.Handlers.Player.Left -= this.Handle<Exiled.Events.EventArgs.LeftEventArgs>((ev) => this.Player_Left(ev));
         }
 
         private static readonly HashSet<string> JoinedButNotLeft = new HashSet<string>();
@@ -37,6 +39,11 @@ namespace Mistaken.Events
                 JoinedButNotLeft.Add(ev.Player.UserId);
                 Handlers.CustomEvents.InvokeFirstTimeJoined(new EventArgs.FirstTimeJoinedEventArgs(ev.Player));
             }
+        }
+
+        private void Player_Left(Exiled.Events.EventArgs.LeftEventArgs ev)
+        {
+            JoinedButNotLeft.Remove(ev.Player.UserId);
         }
     }
 }

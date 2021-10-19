@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="UnloadingFirearmEventArgs.cs" company="Mistaken">
+// <copyright file="UnloadingWeaponEventArgs.cs" company="Mistaken">
 // Copyright (c) Mistaken. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -9,17 +9,17 @@ using Exiled.API.Features.Items;
 namespace Mistaken.Events.EventArgs
 {
     /// <inheritdoc/>
-    public class UnloadingFirearmEventArgs : System.EventArgs
+    public class UnloadingWeaponEventArgs : System.EventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnloadingFirearmEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="UnloadingWeaponEventArgs"/> class.
         /// Constructor.
         /// </summary>
-        public UnloadingFirearmEventArgs(Exiled.API.Features.Player player, Firearm firearm)
+        public UnloadingWeaponEventArgs(Exiled.API.Features.Player player, bool isAllowed = true)
         {
             this.Player = player;
-            this.Firearm = firearm;
-            this.IsAllowed = true;
+            this.Firearm = player.CurrentItem as Firearm;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
