@@ -4,9 +4,15 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+#pragma warning disable SA1118 // Parameter should not span multiple lines
+
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using HarmonyLib;
 using Mistaken.API.Extensions;
 using Mistaken.Events.EventArgs;
+using Mistaken.Events.Handlers;
+using NorthwoodLib.Pools;
 using RemoteAdmin;
 
 namespace Mistaken.Events.Patches
@@ -14,19 +20,42 @@ namespace Mistaken.Events.Patches
     [HarmonyPatch(typeof(CommandProcessor), nameof(CommandProcessor.ProcessQuery))]
     internal static class SendingCommandPatch
     {
-        public static bool Prefix(string q, CommandSender sender)
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            var player = sender.GetPlayer();
-            if (player == null)
-                return true;
+            List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
+            Label continueLabel = generator.DefineLabel();
+            newInstructions.InsertRange(
+                0,
+                new CodeInstruction[]
+                {
+                    /*
+                     *  var ev = new SendingCommandEventArgs(Extensions.GetPlayer(sender), q);
+                     *  Handlers.CustomEvents.InvokeSendingCommand(ev);
+                     *
+                     *  if (!ev.IsAllowed)
+                     *      return;
+                     */
+                    new CodeInstruction(OpCodes.Ldarg_1),
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Extensions), nameof(Extensions.GetPlayer), new System.Type[] { typeof(CommandSender) })),
+                    new CodeInstruction(OpCodes.Ldarg_0),
+                    new CodeInstruction(OpCodes.Ldc_I4_1),
+                    new CodeInstruction(OpCodes.Newobj, AccessTools.GetDeclaredConstructors(typeof(SendingCommandEventArgs))[0]),
+                    new CodeInstruction(OpCodes.Dup),
 
-            var ev = new SendingCommandEventArgs(player, q);
-            Handlers.CustomEvents.InvokeSendingCommand(ev);
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(CustomEvents), nameof(CustomEvents.InvokeSendingCommand))),
 
-            if (!ev.IsAllowed)
-                return false;
+                    new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(SendingCommandEventArgs), nameof(SendingCommandEventArgs.IsAllowed))),
+                    new CodeInstruction(OpCodes.Brtrue_S, continueLabel),
+                    new CodeInstruction(OpCodes.Ret),
 
-            return true;
+                    new CodeInstruction(OpCodes.Nop).WithLabels(continueLabel),
+                });
+
+            for (int z = 0; z < newInstructions.Count; z++)
+                yield return newInstructions[z];
+
+            ListPool<CodeInstruction>.Shared.Return(newInstructions);
+            yield break;
         }
     }
 }

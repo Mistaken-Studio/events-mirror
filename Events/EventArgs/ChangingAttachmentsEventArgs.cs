@@ -15,12 +15,12 @@ namespace Mistaken.Events.EventArgs
         /// Initializes a new instance of the <see cref="ChangingAttachmentsEventArgs"/> class.
         /// Constructor.
         /// </summary>
-        public ChangingAttachmentsEventArgs(Exiled.API.Features.Player player, Firearm firearm, uint newAttachmentsCode)
+        public ChangingAttachmentsEventArgs(Exiled.API.Features.Player player, Firearm firearm, uint newAttachmentsCode, bool isAllowed = true)
         {
             this.Player = player;
             this.Firearm = firearm;
             this.NewAttachmentsCode = newAttachmentsCode;
-            this.IsAllowed = true;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

@@ -30,19 +30,6 @@ namespace Mistaken.Events.Handlers
         }
 
         /// <summary>
-        /// Event called when broadcast was sent.
-        /// </summary>
-        public static event Exiled.Events.Events.CustomEventHandler<BroadcastEventArgs> Broadcast;
-
-        /// <inheritdoc cref="Broadcast"/>
-        [System.Obsolete("Use Broadcast", true)]
-        public static event Exiled.Events.Events.CustomEventHandler<BroadcastEventArgs> OnBroadcast
-        {
-            add => Broadcast += value;
-            remove => Broadcast -= value;
-        }
-
-        /// <summary>
         /// Event called when player joins first time in a session.
         /// </summary>
         public static event Exiled.Events.Events.CustomEventHandler<FirstTimeJoinedEventArgs> FirstTimeJoined;
@@ -61,9 +48,9 @@ namespace Mistaken.Events.Handlers
         public static event Exiled.Events.Events.CustomEventHandler<ChangingAttachmentsEventArgs> ChangingAttachments;
 
         /// <summary>
-        /// Event called when player is unloading firearm.
+        /// Event called when player is unloading weapon.
         /// </summary>
-        public static event Exiled.Events.Events.CustomEventHandler<UnloadingFirearmEventArgs> UnloadingFirearm;
+        public static event Exiled.Events.Events.CustomEventHandler<UnloadingWeaponEventArgs> UnloadingWeapon;
 
         /// <summary>
         /// Event called when player is sending RA command.
@@ -83,17 +70,9 @@ namespace Mistaken.Events.Handlers
         /// <summary>
         /// Invokes <see cref="RequestPickItem"/> with <paramref name="ev"/> as parameter.
         /// </summary>
-        public static void InvokeRequestPickItem(ref PickItemRequestEventArgs ev)
+        public static void InvokeRequestPickItem(PickItemRequestEventArgs ev)
         {
             RequestPickItem.InvokeSafely(ev);
-        }
-
-        /// <summary>
-        /// Invokes <see cref="Broadcast"/> with <paramref name="ev"/> as parameter.
-        /// </summary>
-        public static void InvokeBroadcast(ref BroadcastEventArgs ev)
-        {
-            Broadcast.InvokeSafely(ev);
         }
 
         /// <summary>
@@ -113,11 +92,11 @@ namespace Mistaken.Events.Handlers
         }
 
         /// <summary>
-        /// Invokes <see cref="UnloadingFirearm"/> with <paramref name="ev"/> as parameter.
+        /// Invokes <see cref="UnloadingWeapon"/> with <paramref name="ev"/> as parameter.
         /// </summary>
-        public static void InvokeUnloadingFirearm(UnloadingFirearmEventArgs ev)
+        public static void InvokeUnloadingWeapon(UnloadingWeaponEventArgs ev)
         {
-            UnloadingFirearm.InvokeSafely(ev);
+            UnloadingWeapon.InvokeSafely(ev);
         }
 
         /// <summary>

@@ -56,7 +56,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EventArgs\BroadcastEventArgs.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="CustomEvents.cs" />
     <Compile Include="EventArgs\FirstTimeJoinedEventArgs.cs" />
@@ -65,14 +64,10 @@
     <Compile Include="EventArgs\SendingCommandEventArgs.cs" />
     <Compile Include="EventArgs\AimingEventArgs.cs" />
     <Compile Include="EventArgs\ChangingSpectatedPlayerEventArgs.cs" />
-    <Compile Include="EventArgs\UnloadingFirearmEventArgs.cs" />
-    <Compile Include="Patches\BroadcastRpcAddElementPatch.cs" />
-    <Compile Include="Patches\BroadcastTargetAddElementPatch.cs" />
-    <Compile Include="Patches\BroadcastTargetReplyPatch.cs" />
+    <Compile Include="EventArgs\UnloadingWeaponEventArgs.cs" />
     <Compile Include="Patches\SendingCommandPatch.cs" />
-    <Compile Include="Patches\AimingPatch.cs" />
     <Compile Include="Patches\ChangingSpectatedPlayerPatch.cs" />
-    <Compile Include="Patches\UnloadingFirearmPatch.cs" />
+    <Compile Include="Patches\WeaponPatch.cs" />
     <Compile Include="Patches\ChangingAttachmentsPatch.cs" />
     <Compile Include="Patches\PickingItemPatch.cs" />
     <Compile Include="PluginHandler.cs" />

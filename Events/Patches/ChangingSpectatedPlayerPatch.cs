@@ -4,31 +4,64 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+#pragma warning disable SA1118 // Parameter should not span multiple lines
+
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using Exiled.API.Features;
 using HarmonyLib;
 using Mistaken.Events.EventArgs;
+using Mistaken.Events.Handlers;
+using NorthwoodLib.Pools;
 
 namespace Mistaken.Events.Patches
 {
     [HarmonyPatch(typeof(SpectatorManager), nameof(SpectatorManager.CurrentSpectatedPlayer), MethodType.Setter)]
     internal static class ChangingSpectatedPlayerPatch
     {
-#pragma warning disable SA1313 // Parameter names should begin with lower-case letter
-        public static void Prefix(SpectatorManager __instance, ReferenceHub value)
-#pragma warning restore SA1313 // Parameter names should begin with lower-case letter
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            if (__instance.CurrentSpectatedPlayer == value)
-                return;
+            List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
+            Label continueLabel = generator.DefineLabel();
+            Label continueAndPopLabel = generator.DefineLabel();
 
-            var spectator = Player.Get(__instance._hub);
-            if (spectator == null)
-                return;
+            int index = newInstructions.FindIndex(x => x.opcode == OpCodes.Ret) + 1;
+            newInstructions.InsertRange(
+                index,
+                new CodeInstruction[]
+                {
+                    /*
+                     *  var spectator = Player.Get(__instance._hub);
+                     *  if (spectator != null)
+                     *  {
+                     *      var ev = new ChangingSpectatedPlayerEventArgs(spectator, Player.Get(__instance.CurrentSpectatedPlayer), Player.Get(value));
+                     *
+                     *      Handlers.CustomEvents.InvokeChangingSpectatedPlayer(ev);
+                     *  }
+                     */
 
-            var oldPlayer = Player.Get(__instance.CurrentSpectatedPlayer);
-            var newPlayer = Player.Get(value);
-            var ev = new ChangingSpectatedPlayerEventArgs(spectator, oldPlayer, newPlayer);
+                    new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(newInstructions[index]), // [this]
+                    new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(SpectatorManager), nameof(SpectatorManager._hub))), // [ReferenceHub]
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Player), nameof(Player.Get), new System.Type[] { typeof(ReferenceHub) })), // [Player]
+                    new CodeInstruction(OpCodes.Dup), // [Player, Player]
+                    new CodeInstruction(OpCodes.Brfalse_S, continueAndPopLabel), // [Player]
+                    new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(newInstructions[index]), // [this, Player]
+                    new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(SpectatorManager), nameof(SpectatorManager._currentSpectatedPlayer))), // [ReferenceHub(OldSpectated), Player(Spectator)]
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Player), nameof(Player.Get), new System.Type[] { typeof(ReferenceHub) })), // [Player(OldSpectated), Player(Spectator)]
+                    new CodeInstruction(OpCodes.Ldarg_1), // [ReferenceHub, Player(OldSpectated), Player(Spectator)]
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Player), nameof(Player.Get), new System.Type[] { typeof(ReferenceHub) })), // [Player(NewSpectated), Player(OldSpectated), Player(Spectator)]
+                    new CodeInstruction(OpCodes.Newobj, AccessTools.GetDeclaredConstructors(typeof(ChangingSpectatedPlayerEventArgs))[0]),  // [EventArgs]
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(CustomEvents), nameof(CustomEvents.InvokeChangingSpectatedPlayer))),  // []
 
-            Handlers.CustomEvents.InvokeChangingSpectatedPlayer(ev);
+                    new CodeInstruction(OpCodes.Pop).WithLabels(continueAndPopLabel),
+                    new CodeInstruction(OpCodes.Nop).WithLabels(continueLabel),
+                });
+
+            for (int z = 0; z < newInstructions.Count; z++)
+                yield return newInstructions[z];
+
+            ListPool<CodeInstruction>.Shared.Return(newInstructions);
+            yield break;
         }
     }
 }

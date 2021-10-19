@@ -4,63 +4,101 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+#pragma warning disable SA1118 // Parameter should not span multiple lines
+
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using Exiled.API.Features;
+using Exiled.API.Features.Items;
 using HarmonyLib;
-using InventorySystem;
-using InventorySystem.Items.Firearms;
 using InventorySystem.Items.Firearms.Attachments;
-using Mirror;
 using Mistaken.Events.EventArgs;
-using UnityEngine;
+using Mistaken.Events.Handlers;
+using NorthwoodLib.Pools;
 
 namespace Mistaken.Events.Patches
 {
     [HarmonyPatch(typeof(AttachmentsServerHandler), nameof(AttachmentsServerHandler.ServerReceiveChangeRequest))]
     internal static class ChangingAttachmentsPatch
     {
-        public static bool Prefix(NetworkConnection conn, AttachmentsChangeRequest msg)
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            ReferenceHub referenceHub;
-            if (!NetworkServer.active || !ReferenceHub.TryGetHub(conn.identity.gameObject, out referenceHub))
-                return false;
-            Firearm firearm = referenceHub.inventory.CurInstance as Firearm;
-            if (firearm == null)
-                return false;
-            if (referenceHub.inventory.CurItem.SerialNumber != msg.WeaponSerial)
-                return false;
-            bool flag = referenceHub.characterClassManager.CurClass == RoleType.Spectator;
-            if (!flag)
-            {
-                foreach (WorkstationController workstationController in WorkstationController.AllWorkstations)
+            List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
+            Label continueLabel = generator.DefineLabel();
+
+            LocalBuilder evField = generator.DeclareLocal(typeof(ChangingAttachmentsEventArgs));
+
+            int startIndex = newInstructions.FindLastIndex(x => x.opcode == OpCodes.Brfalse) + 1;
+            newInstructions.RemoveAt(startIndex); // ldloc.1
+            newInstructions.RemoveAt(startIndex); // ldarg.1
+            newInstructions.RemoveAt(startIndex); // ldfld     uint32 InventorySystem.Items.Firearms.Attachments.AttachmentsChangeRequest::AttachmentsCode
+
+            newInstructions.InsertRange(
+                startIndex,
+                new CodeInstruction[]
                 {
-                    if (!(workstationController == null) && workstationController.Status == 3 && workstationController.IsInRange(referenceHub))
-                    {
-                        flag = true;
-                        break;
-                    }
-                }
-            }
+                    /*
+                     *  var ev = new ChangingAttachmentsEventArgs(Player.Get(ReferenceHub), (Firearm)Item.Get(firearm), msg.AttachmentsCode, true);
+                     *  Handlers.CustomEvents.InvokeChangingAttachments(ev);
+                     *
+                     *  if (!ev.IsAllowed)
+                     *      return false;
+                     *  firearm.ApplyAttachmentsCode(ev.NewAttachmentsCode, true);
+                     *  ...
+                     *  firearm.Status = new FirearmStatus((byte)Mathf.Min((int)firearm.Status.Ammo, (int)firearm.AmmoManagerModule.MaxAmmo), firearm.Status.Flags, ev.NewAttachmentsCode);
+                     */
 
-            if (flag)
-            {
-                var player = Player.Get(referenceHub);
-                var item = (Exiled.API.Features.Items.Firearm)Exiled.API.Features.Items.Item.Get(firearm);
-                var ev = new ChangingAttachmentsEventArgs(player, item, msg.AttachmentsCode);
+                    // Player.Get(ReferenceHub)
+                    new CodeInstruction(OpCodes.Ldloc_0), // [ReferenceHub]
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Player), nameof(Player.Get), new System.Type[] { typeof(ReferenceHub) })), // [Player]
 
-                Handlers.CustomEvents.InvokeChangingAttachments(ev);
+                    // (Exiled.API.Features.Items.Firearm)Exiled.API.Features.Items.Item.Get(firearm)
+                    new CodeInstruction(OpCodes.Ldloc_1), // [BaseFirearm, Player]
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Item), nameof(Item.Get))), // [Item, Player]
+                    new CodeInstruction(OpCodes.Castclass, typeof(Exiled.API.Features.Items.Firearm)), // [Firearm, Player]
 
-                if (!ev.IsAllowed)
-                    return false;
+                    // ev = new ChangingAttachmentsEventArgs(player, item, AttachmentsChangeRequest.AttachmentsCode, true)
+                    new CodeInstruction(OpCodes.Ldarg_1),  // [AttachmentRequestChangeRequest, Firearm, Player]
+                    new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(AttachmentsChangeRequest), nameof(AttachmentsChangeRequest.AttachmentsCode))),  // [int, Firearm, Player]
+                    new CodeInstruction(OpCodes.Ldc_I4_1), // [bool, int, Firearm, Player]
+                    new CodeInstruction(OpCodes.Newobj, AccessTools.GetDeclaredConstructors(typeof(ChangingAttachmentsEventArgs))[0]),  // [EventArgs]
+                    new CodeInstruction(OpCodes.Stloc, evField), // []
 
-                var attachmentCode = firearm.ValidateAttachmentsCode(ev.NewAttachmentsCode);
+                    // CustomEvents.InvokeChangingAttachments(ev)
+                    new CodeInstruction(OpCodes.Ldloc, evField), // [EventArgs]
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(CustomEvents), nameof(CustomEvents.InvokeChangingAttachments))),  // []
 
-                firearm.ApplyAttachmentsCode(attachmentCode, true);
-                if (firearm.Status.Ammo > firearm.AmmoManagerModule.MaxAmmo)
-                    referenceHub.inventory.ServerAddAmmo(firearm.AmmoType, (int)(firearm.Status.Ammo - firearm.AmmoManagerModule.MaxAmmo));
-                firearm.Status = new FirearmStatus((byte)Mathf.Min((int)firearm.Status.Ammo, (int)firearm.AmmoManagerModule.MaxAmmo), firearm.Status.Flags, attachmentCode);
-            }
+                    // if(!ev.IsAllowed) return
+                    new CodeInstruction(OpCodes.Ldloc, evField), // [EventArgs]
+                    new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(ChangingAttachmentsEventArgs), nameof(ChangingAttachmentsEventArgs.IsAllowed))),  // [bool]
+                    new CodeInstruction(OpCodes.Brtrue_S, continueLabel),  // []
+                    new CodeInstruction(OpCodes.Ret), // END
 
-            return false;
+                    // ev.NewAttachmentsCode
+                    new CodeInstruction(OpCodes.Ldloc_1).WithLabels(continueLabel), // Input: [] | Result: [FirearmBase]
+                    new CodeInstruction(OpCodes.Ldloc, evField),  // [EventArgs, FirearmBase]
+                    new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(ChangingAttachmentsEventArgs), nameof(ChangingAttachmentsEventArgs.NewAttachmentsCode))),  // [int, FirearmBase]
+                });
+
+            int lastIndex = newInstructions.FindLastIndex(x => x.opcode == OpCodes.Ldarg_1);
+
+            newInstructions.RemoveAt(lastIndex);  // ldarg.1
+            newInstructions.RemoveAt(lastIndex);  // ldfld     uint32 InventorySystem.Items.Firearms.Attachments.AttachmentsChangeRequest::AttachmentsCode
+
+            newInstructions.InsertRange(
+                lastIndex,
+                new CodeInstruction[]
+                {
+                    // ev.NewAttachmentsCode
+                    new CodeInstruction(OpCodes.Ldloc, evField), // [EventArgs]
+                    new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(ChangingAttachmentsEventArgs), nameof(ChangingAttachmentsEventArgs.NewAttachmentsCode))), // [int]
+                });
+
+            for (int z = 0; z < newInstructions.Count; z++)
+                yield return newInstructions[z];
+
+            ListPool<CodeInstruction>.Shared.Return(newInstructions);
+            yield break;
         }
     }
 }
