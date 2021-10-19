@@ -25,7 +25,7 @@ namespace Mistaken.Events.Patches
             if (__instance?.Hub == null)
                 return true;
             PickItemRequestEventArgs data = new PickItemRequestEventArgs(Exiled.API.Features.Player.Get(__instance.Hub), Exiled.API.Features.Items.Pickup.Get(__instance.TargetPickup));
-            CustomEvents.InvokeOnRequestPickItem(ref data);
+            CustomEvents.InvokeRequestPickItem(ref data);
             if (!data.IsAllowed)
             {
                 data.Pickup.InUse = false;

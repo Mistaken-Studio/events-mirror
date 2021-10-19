@@ -6,7 +6,6 @@
 
 using System.Linq;
 using HarmonyLib;
-using Mirror;
 using Mistaken.Events.EventArgs;
 using Mistaken.Events.Handlers;
 
@@ -23,7 +22,7 @@ namespace Mistaken.Events.Patches
                 admin = tmp.Last();
             var contentWithoutAdmin = tmp.Length == 1 ? data : data.Substring(0, data.Length - (admin.Length + 1));
             var ev = new BroadcastEventArgs(flags, contentWithoutAdmin, admin, Exiled.API.Features.Player.UserIdsCache.Keys.ToArray());
-            CustomEvents.InvokeOnBroadcast(ref ev);
+            CustomEvents.InvokeBroadcast(ref ev);
             return true;
         }
     }

@@ -20,15 +20,15 @@ namespace Mistaken.Events.Patches
     {
         public static bool Prefix(NetworkConnection conn, AttachmentsChangeRequest msg)
         {
-            global::ReferenceHub referenceHub;
-            if (!NetworkServer.active || !global::ReferenceHub.TryGetHub(conn.identity.gameObject, out referenceHub))
+            ReferenceHub referenceHub;
+            if (!NetworkServer.active || !ReferenceHub.TryGetHub(conn.identity.gameObject, out referenceHub))
                 return false;
             Firearm firearm = referenceHub.inventory.CurInstance as Firearm;
             if (firearm == null)
                 return false;
             if (referenceHub.inventory.CurItem.SerialNumber != msg.WeaponSerial)
                 return false;
-            bool flag = referenceHub.characterClassManager.CurClass == global::RoleType.Spectator;
+            bool flag = referenceHub.characterClassManager.CurClass == RoleType.Spectator;
             if (!flag)
             {
                 foreach (WorkstationController workstationController in WorkstationController.AllWorkstations)
@@ -47,7 +47,7 @@ namespace Mistaken.Events.Patches
                 var item = (Exiled.API.Features.Items.Firearm)Exiled.API.Features.Items.Item.Get(firearm);
                 var ev = new ChangingAttachmentsEventArgs(player, item, msg.AttachmentsCode);
 
-                Handlers.CustomEvents.InvokeOnChangingAttachments(ev);
+                Handlers.CustomEvents.InvokeChangingAttachments(ev);
 
                 if (!ev.IsAllowed)
                     return false;
