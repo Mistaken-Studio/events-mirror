@@ -50,6 +50,7 @@ namespace Mistaken.Events.Handlers
         /// <summary>
         /// Event called when player is unloading weapon.
         /// </summary>
+        [System.Obsolete("Use Exiled.Events (obecnie tylko na branchu dev)")]
         public static event Exiled.Events.Events.CustomEventHandler<UnloadingWeaponEventArgs> UnloadingWeapon;
 
         /// <summary>
@@ -60,6 +61,7 @@ namespace Mistaken.Events.Handlers
         /// <summary>
         /// Event called when player is aiming-in or aiming-out.
         /// </summary>
+        [System.Obsolete("Use Exiled.Events (obecnie tylko na branchu dev)")]
         public static event Exiled.Events.Events.CustomEventHandler<AimingEventArgs> Aiming;
 
         /// <summary>
