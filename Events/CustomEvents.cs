@@ -50,8 +50,12 @@ namespace Mistaken.Events.Handlers
         /// <summary>
         /// Event called when player is unloading weapon.
         /// </summary>
-        [System.Obsolete("Use Exiled.Events (obecnie tylko na branchu dev)")]
-        public static event Exiled.Events.Events.CustomEventHandler<UnloadingWeaponEventArgs> UnloadingWeapon;
+        [System.Obsolete("Use Exiled.Events.Handlers.Player.UnloadingWeapon", true)]
+        public static event Exiled.Events.Events.CustomEventHandler<Exiled.Events.EventArgs.UnloadingWeaponEventArgs> UnloadingWeapon
+        {
+            add => Exiled.Events.Handlers.Player.UnloadingWeapon += value;
+            remove => Exiled.Events.Handlers.Player.UnloadingWeapon -= value;
+        }
 
         /// <summary>
         /// Event called when player is sending RA command.
@@ -61,8 +65,12 @@ namespace Mistaken.Events.Handlers
         /// <summary>
         /// Event called when player is aiming-in or aiming-out.
         /// </summary>
-        [System.Obsolete("Use Exiled.Events (obecnie tylko na branchu dev)")]
-        public static event Exiled.Events.Events.CustomEventHandler<AimingEventArgs> Aiming;
+        [System.Obsolete("Use Exiled.Events.Handlers.Player.AimingDownSight", true)]
+        public static event Exiled.Events.Events.CustomEventHandler<Exiled.Events.EventArgs.AimingDownSightEventArgs> Aiming
+        {
+            add => Exiled.Events.Handlers.Player.AimingDownSight += value;
+            remove => Exiled.Events.Handlers.Player.AimingDownSight -= value;
+        }
 
         /// <summary>
         /// Event called when player is changing spectated player.
@@ -94,27 +102,11 @@ namespace Mistaken.Events.Handlers
         }
 
         /// <summary>
-        /// Invokes <see cref="UnloadingWeapon"/> with <paramref name="ev"/> as parameter.
-        /// </summary>
-        public static void InvokeUnloadingWeapon(UnloadingWeaponEventArgs ev)
-        {
-            UnloadingWeapon.InvokeSafely(ev);
-        }
-
-        /// <summary>
         /// Invokes <see cref="SendingCommand"/> with <paramref name="ev"/> as parameter.
         /// </summary>
         public static void InvokeSendingCommand(SendingCommandEventArgs ev)
         {
             SendingCommand.InvokeSafely(ev);
-        }
-
-        /// <summary>
-        /// Invokes <see cref="Aiming"/> with <paramref name="ev"/> as parameter.
-        /// </summary>
-        public static void InvokeAiming(AimingEventArgs ev)
-        {
-            Aiming.InvokeSafely(ev);
         }
 
         /// <summary>
@@ -128,35 +120,20 @@ namespace Mistaken.Events.Handlers
         /// <summary>
         /// Data about SCP079.
         /// </summary>
+        [System.Obsolete("Use MapPlus", true)]
         public static class SCP079
         {
             /// <summary>
             /// Gets a value indicating whether is recontainment in proggres.
             /// </summary>
-            public static bool IsBeingRecontained => Recontainer._prevEngaged >= 3;
+            [System.Obsolete("Use MapPlus.IsSCP079ReadyForRecontainment", true)]
+            public static bool IsBeingRecontained => MapPlus.IsSCP079ReadyForRecontainment;
 
             /// <summary>
             /// Gets a value indicating whether recontainment has finished.
             /// </summary>
-            public static bool IsRecontained => Recontainer._alreadyRecontained;
-
-            private static int roundId = -1;
-
-            private static Recontainer079 recontainer;
-
-            private static Recontainer079 Recontainer
-            {
-                get
-                {
-                    if (RoundPlus.RoundId != roundId)
-                    {
-                        recontainer = GameObject.FindObjectOfType<Recontainer079>();
-                        roundId = RoundPlus.RoundId;
-                    }
-
-                    return recontainer;
-                }
-            }
+            [System.Obsolete("Use MapPlus.IsSCP079Recontained", true)]
+            public static bool IsRecontained => MapPlus.IsSCP079Recontained;
         }
     }
 }
