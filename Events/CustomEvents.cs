@@ -75,6 +75,7 @@ namespace Mistaken.Events.Handlers
         /// <summary>
         /// Event called when player is changing spectated player.
         /// </summary>
+        [System.Obsolete("Use Exiled.Events.Handlers.Player.UnloadingWeapon (Will be in next release after 3.3.1)")]
         public static event Exiled.Events.Events.CustomEventHandler<ChangingSpectatedPlayerEventArgs> ChangingSpectatedPlayer;
 
         /// <summary>
