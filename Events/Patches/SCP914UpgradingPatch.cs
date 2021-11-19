@@ -25,20 +25,35 @@ namespace Mistaken.Events.Patches
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
 
+            var continueLabel = generator.DefineLabel();
+
             int startIndex = 0;
+            newInstructions[0].WithLabels(continueLabel);
             newInstructions.InsertRange(
                 startIndex,
                 new CodeInstruction[]
                 {
                     /*
-                     *  var ev = new SCP914UpgradingEventArgs();
+                     *  var ev = new SCP914UpgradingEventArgs(Scp914KnobSetting, bool);
                      *  Handlers.CustomEvents.InvokeSCP914Upgrading(ev);
                      */
-                    // ev = new SCP914UpgradingEventArgs()
+                    // ev = new SCP914UpgradingEventArgs(Scp914KnobSetting, bool)
+                    new CodeInstruction(OpCodes.Ldarg_3),  // [Scp914KnobSetting]
+                    new CodeInstruction(OpCodes.Ldc_I4_1),  // [bool, Scp914KnobSetting]
                     new CodeInstruction(OpCodes.Newobj, AccessTools.GetDeclaredConstructors(typeof(SCP914UpgradingEventArgs))[0]),  // [EventArgs]
+                    new CodeInstruction(OpCodes.Dup),  // [EventArgs, EventArgs]
+                    new CodeInstruction(OpCodes.Dup),  // [EventArgs, EventArgs, EventArgs]
 
                     // CustomEvents.InvokeSCP914Upgrading(ev)
-                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(CustomEvents), nameof(CustomEvents.InvokeSCP914Upgrading))),  // []
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(CustomEvents), nameof(CustomEvents.InvokeSCP914Upgrading))),  // [EventArgs, EventArgs]
+
+                    new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(SCP914UpgradingEventArgs), nameof(SCP914UpgradingEventArgs.KnobSetting))),  // [bool, EventArgs]
+                    new CodeInstruction(OpCodes.Starg_S, 3),  // [EventArgs]
+
+                    new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(SCP914UpgradingEventArgs), nameof(SCP914UpgradingEventArgs.IsAllowed))),  // [bool]
+                    new CodeInstruction(OpCodes.Brtrue_S, continueLabel),  // []
+
+                    new CodeInstruction(OpCodes.Ret),  // []
                 });
 
             for (int z = 0; z < newInstructions.Count; z++)
