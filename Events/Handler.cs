@@ -22,15 +22,23 @@ namespace Mistaken.Events
         {
             Exiled.Events.Handlers.Player.Verified += this.Player_Verified;
             Exiled.Events.Handlers.Player.Left += this.Player_Left;
+            Exiled.Events.Handlers.Server.WaitingForPlayers += this.Server_WaitingForPlayers;
         }
 
         public override void OnDisable()
         {
             Exiled.Events.Handlers.Player.Verified -= this.Player_Verified;
             Exiled.Events.Handlers.Player.Left -= this.Player_Left;
+            Exiled.Events.Handlers.Server.WaitingForPlayers -= this.Server_WaitingForPlayers;
         }
 
         private static readonly HashSet<string> JoinedButNotLeft = new HashSet<string>();
+
+        private void Server_WaitingForPlayers()
+        {
+            Handlers.CustomEvents.InvokeLoadedPlugins();
+            Exiled.Events.Handlers.Server.WaitingForPlayers -= this.Server_WaitingForPlayers;
+        }
 
         private void Player_Verified(Exiled.Events.EventArgs.VerifiedEventArgs ev)
         {
