@@ -40,6 +40,11 @@ namespace Mistaken.Events.Handlers
         public static event Exiled.Events.Events.CustomEventHandler<SCP914UpgradingEventArgs> SCP914Upgrading;
 
         /// <summary>
+        /// Event called when all plugins are loaded and enabled.
+        /// </summary>
+        public static event Exiled.Events.Events.CustomEventHandler LoadedPlugins;
+
+        /// <summary>
         /// Invokes <see cref="RequestPickItem"/> with <paramref name="ev"/> as parameter.
         /// </summary>
         public static void InvokeRequestPickItem(PickItemRequestEventArgs ev)
@@ -77,6 +82,14 @@ namespace Mistaken.Events.Handlers
         public static void InvokeSCP914Upgrading(SCP914UpgradingEventArgs ev)
         {
             SCP914Upgrading.InvokeSafely(ev);
+        }
+
+        /// <summary>
+        /// Invokes <see cref="LoadedPlugins"/>.
+        /// </summary>
+        public static void InvokeLoadedPlugins()
+        {
+            LoadedPlugins.InvokeSafely();
         }
     }
 }
