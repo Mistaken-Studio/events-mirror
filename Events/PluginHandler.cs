@@ -34,7 +34,7 @@ namespace Mistaken.Events
             this.harmony = new HarmonyLib.Harmony("com.mistaken.events");
             this.harmony.PatchAll();
 
-            new Handler(this);
+            new EventsHandler(this);
 
             API.Diagnostics.Module.OnEnable(this);
 
