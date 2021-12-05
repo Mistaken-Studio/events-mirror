@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="Handler.cs" company="Mistaken">
+// <copyright file="EventsHandler.cs" company="Mistaken">
 // Copyright (c) Mistaken. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -9,9 +9,9 @@ using Mistaken.API.Diagnostics;
 
 namespace Mistaken.Events
 {
-    internal class Handler : Module
+    internal class EventsHandler : Module
     {
-        public Handler(PluginHandler plugin)
+        public EventsHandler(PluginHandler plugin)
             : base(plugin)
         {
         }

@@ -26,7 +26,7 @@ namespace Mistaken.Events
         public override PluginPriority Priority => PluginPriority.High;
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion => new Version(3, 0, 3);
+        public override Version RequiredExiledVersion => new Version(4, 1, 2);
 
         /// <inheritdoc/>
         public override void OnEnabled()
@@ -34,7 +34,7 @@ namespace Mistaken.Events
             this.harmony = new HarmonyLib.Harmony("com.mistaken.events");
             this.harmony.PatchAll();
 
-            new Handler(this);
+            new EventsHandler(this);
 
             API.Diagnostics.Module.OnEnable(this);
 
