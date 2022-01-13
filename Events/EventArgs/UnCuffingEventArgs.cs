@@ -1,5 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="UnCuffingEventArgs.cs" company="Mistaken">
+// -----------------------------------------------------------------------
+// <copyright file="UncuffingEventArgs.cs" company="Mistaken">
 // Copyright (c) Mistaken. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------

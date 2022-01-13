@@ -1,5 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="UnCuffingPatch.cs" company="Mistaken">
+// -----------------------------------------------------------------------
+// <copyright file="UncuffingPatch.cs" company="Mistaken">
 // Copyright (c) Mistaken. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
