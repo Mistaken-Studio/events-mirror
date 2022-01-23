@@ -47,7 +47,7 @@ namespace Mistaken.Events.Handlers
         /// <summary>
         /// Event called when player is being uncuffed.
         /// </summary>
-        public static event Exiled.Events.Events.CustomEventHandler Uncuffing;
+        public static event Exiled.Events.Events.CustomEventHandler<UncuffingEventArgs> Uncuffing;
 
         /// <summary>
         /// Invokes <see cref="RequestPickItem"/> with <paramref name="ev"/> as parameter.
@@ -98,11 +98,11 @@ namespace Mistaken.Events.Handlers
         }
 
         /// <summary>
-        /// Invokes <see cref="Uncuffing"/>.
+        /// Invokes <see cref="Uncuffing"/> with <paramref name="ev"/> as parameter.
         /// </summary>
-        public static void InvokeUncuffing()
+        public static void InvokeUncuffing(UncuffingEventArgs ev)
         {
-            Uncuffing.InvokeSafely();
+            Uncuffing.InvokeSafely(ev);
         }
     }
 }
