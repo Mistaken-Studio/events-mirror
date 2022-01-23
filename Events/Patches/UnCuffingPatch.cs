@@ -37,6 +37,7 @@ namespace Mistaken.Events.Patches
                     new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(DisarmMessage), nameof(DisarmMessage.PlayerToDisarm))),
                     new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Player), nameof(Player.Get), new Type[] { typeof(ReferenceHub) })),
                     new CodeInstruction(OpCodes.Ldloc_0),
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Player), nameof(Player.Get), new Type[] { typeof(ReferenceHub) })),
                     new CodeInstruction(OpCodes.Ldc_I4_1),
                     new CodeInstruction(OpCodes.Newobj, AccessTools.GetDeclaredConstructors(typeof(UncuffingEventArgs))[0]),
                     new CodeInstruction(OpCodes.Dup),
