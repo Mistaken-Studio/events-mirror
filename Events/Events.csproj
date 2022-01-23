@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="CustomEvents.cs" />
+    <Compile Include="EventArgs\UncuffingEventArgs.cs" />
     <Compile Include="EventArgs\FirstTimeJoinedEventArgs.cs" />
     <Compile Include="EventArgs\ChangingAttachmentsEventArgs.cs" />
     <Compile Include="EventArgs\PickItemRequestEventArgs.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="EventArgs\SendingCommandEventArgs.cs" />
     <Compile Include="Patches\SCP914UpgradingPatch.cs" />
     <Compile Include="Patches\LoadedPluginsPatch.cs" />
+    <Compile Include="Patches\UncuffingPatch.cs" />
     <Compile Include="Patches\SendingCommandPatch.cs" />
     <Compile Include="Patches\ChangingAttachmentsPatch.cs" />
     <Compile Include="Patches\PickingItemPatch.cs" />
