@@ -17,15 +17,15 @@ using NorthwoodLib.Pools;
 
 namespace Mistaken.Events.Patches
 {
-    [HarmonyPatch(typeof(ItemSearchCompletor), nameof(ItemSearchCompletor.ValidateStart))]
+    [HarmonyPatch(typeof(SearchCompletor), nameof(SearchCompletor.ValidateStart))]
     internal static class PickingItemPatch
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
 
-            Label returnTrueLabel = generator.DefineLabel();
-            int index = newInstructions.Count - 2;
+            Label returnFalseLabel = generator.DefineLabel();
+            int index = newInstructions.Count - 3;
             newInstructions.InsertRange(
                 index,
                 new CodeInstruction[]
@@ -39,12 +39,14 @@ namespace Mistaken.Events.Patches
                      *
                      *  return true;
                      */
+                    // Last: Bool if all good
+                    new CodeInstruction(OpCodes.Brfalse_S, returnFalseLabel), // []
 
                     new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(newInstructions[index]), // [this]
-                    new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ItemSearchCompletor), nameof(ItemSearchCompletor.Hub))), // [hub]
+                    new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(SearchCompletor), nameof(SearchCompletor.Hub))), // [hub]
                     new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Exiled.API.Features.Player), nameof(Exiled.API.Features.Player.Get), new System.Type[] { typeof(ReferenceHub) })), // [player]
                     new CodeInstruction(OpCodes.Ldarg_0), // [this, player]
-                    new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ItemSearchCompletor), nameof(ItemSearchCompletor.TargetPickup))), // [PickupBase, player]
+                    new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(SearchCompletor), nameof(SearchCompletor.TargetPickup))), // [PickupBase, player]
                     new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Exiled.API.Features.Items.Pickup), nameof(Exiled.API.Features.Items.Pickup.Get))), // [pickup, player]
                     new CodeInstruction(OpCodes.Newobj, AccessTools.GetDeclaredConstructors(typeof(PickItemRequestEventArgs))[0]), // [EventArgs]
                     new CodeInstruction(OpCodes.Dup), // [EventArgs, EventArgs]
@@ -52,13 +54,14 @@ namespace Mistaken.Events.Patches
                     new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(CustomEvents), nameof(CustomEvents.InvokeRequestPickItem))), // [EventArgs]
 
                     new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(PickItemRequestEventArgs), nameof(PickItemRequestEventArgs.IsAllowed))), // [bool]
-                    new CodeInstruction(OpCodes.Brtrue_S, returnTrueLabel), // []
+                    new CodeInstruction(OpCodes.Brfalse_S, returnFalseLabel), // []
 
-                    new CodeInstruction(OpCodes.Ldc_I4_0), // [float]
-                    new CodeInstruction(OpCodes.Ret), // []
+                    new CodeInstruction(OpCodes.Ldc_I4_1), // [int]
+
+                    // Next: Return
                 });
 
-            newInstructions[newInstructions.Count - 2].WithLabels(returnTrueLabel);
+            newInstructions[newInstructions.Count - 2].WithLabels(returnFalseLabel);
 
             for (int z = 0; z < newInstructions.Count; z++)
                 yield return newInstructions[z];
