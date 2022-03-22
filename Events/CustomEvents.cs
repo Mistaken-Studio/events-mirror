@@ -24,10 +24,12 @@ namespace Mistaken.Events.Handlers
         /// </summary>
         public static event Exiled.Events.Events.CustomEventHandler<FirstTimeJoinedEventArgs> FirstTimeJoined;
 
+        /*
         /// <summary>
         /// Event called when player is changing attachments.
         /// </summary>
         public static event Exiled.Events.Events.CustomEventHandler<ChangingAttachmentsEventArgs> ChangingAttachments;
+        */
 
         /// <summary>
         /// Event called when player is sending RA command.
@@ -65,6 +67,7 @@ namespace Mistaken.Events.Handlers
             FirstTimeJoined.InvokeSafely(ev);
         }
 
+        /*
         /// <summary>
         /// Invokes <see cref="ChangingAttachments"/> with <paramref name="ev"/> as parameter.
         /// </summary>
@@ -72,6 +75,7 @@ namespace Mistaken.Events.Handlers
         {
             ChangingAttachments.InvokeSafely(ev);
         }
+        */
 
         /// <summary>
         /// Invokes <see cref="SendingCommand"/> with <paramref name="ev"/> as parameter.

@@ -3,7 +3,7 @@
 // Copyright (c) Mistaken. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
-
+/*
 #pragma warning disable SA1118 // Parameter should not span multiple lines
 
 using System.Collections.Generic;
@@ -37,16 +37,15 @@ namespace Mistaken.Events.Patches
                 startIndex,
                 new CodeInstruction[]
                 {
-                    /*
-                     *  var ev = new ChangingAttachmentsEventArgs(Player.Get(ReferenceHub), (Firearm)Item.Get(firearm), msg.AttachmentsCode, true);
-                     *  Handlers.CustomEvents.InvokeChangingAttachments(ev);
-                     *
-                     *  if (!ev.IsAllowed)
-                     *      return false;
-                     *  firearm.ApplyAttachmentsCode(ev.NewAttachmentsCode, true);
-                     *  ...
-                     *  firearm.Status = new FirearmStatus((byte)Mathf.Min((int)firearm.Status.Ammo, (int)firearm.AmmoManagerModule.MaxAmmo), firearm.Status.Flags, ev.NewAttachmentsCode);
-                     */
+                    // tu były te gwiazdki obok tego kodu ale zostały usunięte na potrzeby wykomentowania tego kodu.
+                    // var ev = new ChangingAttachmentsEventArgs(Player.Get(ReferenceHub), (Firearm)Item.Get(firearm), msg.AttachmentsCode, true);
+                    // Handlers.CustomEvents.InvokeChangingAttachments(ev);
+                    //
+                    // if (!ev.IsAllowed)
+                    //    return false;
+                    // firearm.ApplyAttachmentsCode(ev.NewAttachmentsCode, true);
+                    // ...
+                    // firearm.Status = new FirearmStatus((byte)Mathf.Min((int)firearm.Status.Ammo, (int)firearm.AmmoManagerModule.MaxAmmo), firearm.Status.Flags, ev.NewAttachmentsCode);
 
                     // Player.Get(ReferenceHub)
                     new CodeInstruction(OpCodes.Ldloc_0), // [ReferenceHub]
@@ -102,3 +101,4 @@ namespace Mistaken.Events.Patches
         }
     }
 }
+*/
