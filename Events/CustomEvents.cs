@@ -47,6 +47,11 @@ namespace Mistaken.Events.Handlers
         public static event Exiled.Events.Events.CustomEventHandler LoadedPlugins;
 
         /// <summary>
+        /// Event called when all Exiled utility classes are created.
+        /// </summary>
+        public static event Exiled.Events.Events.CustomEventHandler GeneratedCache;
+
+        /// <summary>
         /// Event called when player is being uncuffed.
         /// </summary>
         public static event Exiled.Events.Events.CustomEventHandler<UncuffingEventArgs> Uncuffing;
@@ -99,6 +104,14 @@ namespace Mistaken.Events.Handlers
         public static void InvokeLoadedPlugins()
         {
             LoadedPlugins.InvokeSafely();
+        }
+
+        /// <summary>
+        /// Invokes <see cref="GeneratedCache"/>.
+        /// </summary>
+        public static void InvokeGeneratedCache()
+        {
+            GeneratedCache.InvokeSafely();
         }
 
         /// <summary>

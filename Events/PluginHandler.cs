@@ -5,8 +5,10 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Reflection;
 using Exiled.API.Enums;
 using Exiled.API.Features;
+using Mistaken.Events.Patches;
 
 namespace Mistaken.Events
 {
@@ -32,6 +34,9 @@ namespace Mistaken.Events
         public override void OnEnabled()
         {
             this.harmony = new HarmonyLib.Harmony("com.mistaken.events");
+            this.harmony.Patch(
+                typeof(Exiled.Events.Events).Assembly.GetType("Exiled.Events.Handlers.Internal.MapGenerated").GetMethod("GenerateCache", BindingFlags.NonPublic | BindingFlags.Static),
+                postfix: new HarmonyLib.HarmonyMethod(typeof(GenerateCachePatch), nameof(GenerateCachePatch.Postfix)));
             this.harmony.PatchAll();
 
             new EventsHandler(this);
