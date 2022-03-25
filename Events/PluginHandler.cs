@@ -35,8 +35,8 @@ namespace Mistaken.Events
         {
             this.harmony = new HarmonyLib.Harmony("com.mistaken.events");
             this.harmony.Patch(
-                typeof(Exiled.Events.Events).Assembly.GetType("Exiled.Events.Handlers.Internal.MapGenerated").GetMethod("GenerateCache", BindingFlags.NonPublic | BindingFlags.Static),
-                postfix: new HarmonyLib.HarmonyMethod(typeof(GenerateCachePatch), nameof(GenerateCachePatch.Postfix)));
+                typeof(Door).GetMethod("RegisterDoorTypesOnLevelLoad", BindingFlags.NonPublic | BindingFlags.Static),
+                postfix: new HarmonyLib.HarmonyMethod(typeof(RegisterDoorTypesOnLevelLoadPatch), nameof(RegisterDoorTypesOnLevelLoadPatch.Postfix)));
             this.harmony.PatchAll();
 
             new EventsHandler(this);

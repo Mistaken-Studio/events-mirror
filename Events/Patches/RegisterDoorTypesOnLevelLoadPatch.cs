@@ -1,12 +1,12 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="GenerateCachePatch.cs" company="Mistaken">
+// <copyright file="RegisterDoorTypesOnLevelLoadPatch.cs" company="Mistaken">
 // Copyright (c) Mistaken. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 namespace Mistaken.Events.Patches
 {
-    internal static class GenerateCachePatch
+    internal static class RegisterDoorTypesOnLevelLoadPatch
     {
         public static void Postfix()
         {
