@@ -24,10 +24,12 @@ namespace Mistaken.Events.Handlers
         /// </summary>
         public static event Exiled.Events.Events.CustomEventHandler<FirstTimeJoinedEventArgs> FirstTimeJoined;
 
+        /*
         /// <summary>
         /// Event called when player is changing attachments.
         /// </summary>
         public static event Exiled.Events.Events.CustomEventHandler<ChangingAttachmentsEventArgs> ChangingAttachments;
+        */
 
         /// <summary>
         /// Event called when player is sending RA command.
@@ -43,6 +45,11 @@ namespace Mistaken.Events.Handlers
         /// Event called when all plugins are loaded and enabled.
         /// </summary>
         public static event Exiled.Events.Events.CustomEventHandler LoadedPlugins;
+
+        /// <summary>
+        /// Event called when all Exiled utility classes are created.
+        /// </summary>
+        public static event Exiled.Events.Events.CustomEventHandler GeneratedCache;
 
         /// <summary>
         /// Event called when player is being uncuffed.
@@ -65,6 +72,7 @@ namespace Mistaken.Events.Handlers
             FirstTimeJoined.InvokeSafely(ev);
         }
 
+        /*
         /// <summary>
         /// Invokes <see cref="ChangingAttachments"/> with <paramref name="ev"/> as parameter.
         /// </summary>
@@ -72,6 +80,7 @@ namespace Mistaken.Events.Handlers
         {
             ChangingAttachments.InvokeSafely(ev);
         }
+        */
 
         /// <summary>
         /// Invokes <see cref="SendingCommand"/> with <paramref name="ev"/> as parameter.
@@ -95,6 +104,14 @@ namespace Mistaken.Events.Handlers
         public static void InvokeLoadedPlugins()
         {
             LoadedPlugins.InvokeSafely();
+        }
+
+        /// <summary>
+        /// Invokes <see cref="GeneratedCache"/>.
+        /// </summary>
+        public static void InvokeGeneratedCache()
+        {
+            GeneratedCache.InvokeSafely();
         }
 
         /// <summary>

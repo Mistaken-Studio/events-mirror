@@ -5,8 +5,10 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Reflection;
 using Exiled.API.Enums;
 using Exiled.API.Features;
+using Mistaken.Events.Patches;
 
 namespace Mistaken.Events
 {
@@ -26,12 +28,15 @@ namespace Mistaken.Events
         public override PluginPriority Priority => PluginPriority.High;
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion => new Version(4, 1, 2);
+        public override Version RequiredExiledVersion => new Version(5, 0, 0);
 
         /// <inheritdoc/>
         public override void OnEnabled()
         {
             this.harmony = new HarmonyLib.Harmony("com.mistaken.events");
+            this.harmony.Patch(
+                typeof(Door).GetMethod("RegisterDoorTypesOnLevelLoad", BindingFlags.NonPublic | BindingFlags.Static),
+                postfix: new HarmonyLib.HarmonyMethod(typeof(RegisterDoorTypesOnLevelLoadPatch), nameof(RegisterDoorTypesOnLevelLoadPatch.Postfix)));
             this.harmony.PatchAll();
 
             new EventsHandler(this);

@@ -3,7 +3,7 @@
 // Copyright (c) Mistaken. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
-
+/*
 using Exiled.API.Features.Items;
 
 namespace Mistaken.Events.EventArgs
@@ -44,3 +44,4 @@ namespace Mistaken.Events.EventArgs
         public bool IsAllowed { get; set; }
     }
 }
+*/
