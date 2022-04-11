@@ -17,7 +17,7 @@ namespace Mistaken.Events.Patches
 
         private static IEnumerator<float> InvokeDelay()
         {
-            yield return MEC.Timing.WaitForOneFrame;
+            yield return MEC.Timing.WaitForSeconds(0.3f);
             Handlers.CustomEvents.InvokeGeneratedCache();
         }
     }
