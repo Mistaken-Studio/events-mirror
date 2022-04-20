@@ -8,7 +8,6 @@ using System;
 using System.Reflection;
 using Exiled.API.Enums;
 using Exiled.API.Features;
-using Mistaken.Events.Patches;
 
 namespace Mistaken.Events
 {
@@ -35,8 +34,8 @@ namespace Mistaken.Events
         {
             this.harmony = new HarmonyLib.Harmony("com.mistaken.events");
             this.harmony.Patch(
-                typeof(Door).GetMethod("RegisterDoorTypesOnLevelLoad", BindingFlags.NonPublic | BindingFlags.Static),
-                postfix: new HarmonyLib.HarmonyMethod(typeof(RegisterDoorTypesOnLevelLoadPatch), nameof(RegisterDoorTypesOnLevelLoadPatch.Postfix)));
+                typeof(Exiled.Events.Handlers.Warhead).Assembly.GetType("Exiled.Events.Handlers.Internal.MapGenerated").GetMethod("GenerateCache", BindingFlags.NonPublic | BindingFlags.Static),
+                postfix: new HarmonyLib.HarmonyMethod(typeof(Patches.GenerateCachePatch), nameof(Patches.GenerateCachePatch.Postfix)));
             this.harmony.PatchAll();
 
             new EventsHandler(this);
