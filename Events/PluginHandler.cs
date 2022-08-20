@@ -33,9 +33,6 @@ namespace Mistaken.Events
         public override void OnEnabled()
         {
             this.harmony = new HarmonyLib.Harmony("com.mistaken.events");
-            this.harmony.Patch(
-                typeof(Exiled.Events.Handlers.Warhead).Assembly.GetType("Exiled.Events.Handlers.Internal.MapGenerated").GetMethod("GenerateCache", BindingFlags.NonPublic | BindingFlags.Static),
-                postfix: new HarmonyLib.HarmonyMethod(typeof(Patches.GenerateCachePatch), nameof(Patches.GenerateCachePatch.Postfix)));
             this.harmony.PatchAll();
 
             new EventsHandler(this);
