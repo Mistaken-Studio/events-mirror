@@ -64,7 +64,6 @@
     <Compile Include="EventArgs\PickItemRequestEventArgs.cs" />
     <Compile Include="EventArgs\SCP914UpgradingEventArgs.cs" />
     <Compile Include="EventArgs\SendingCommandEventArgs.cs" />
-    <Compile Include="Patches\GenerateCachePatch.cs" />
     <Compile Include="Patches\SCP914UpgradingPatch.cs" />
     <Compile Include="Patches\LoadedPluginsPatch.cs" />
     <Compile Include="Patches\UncuffingPatch.cs" />
