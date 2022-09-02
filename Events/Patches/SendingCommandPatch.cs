@@ -8,8 +8,8 @@
 
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using Exiled.API.Features;
 using HarmonyLib;
-using Mistaken.API.Extensions;
 using Mistaken.Events.EventArgs;
 using Mistaken.Events.Handlers;
 using NorthwoodLib.Pools;
@@ -36,7 +36,7 @@ namespace Mistaken.Events.Patches
                      *      return;
                      */
                     new CodeInstruction(OpCodes.Ldarg_1),
-                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Extensions), nameof(Extensions.GetPlayer), new System.Type[] { typeof(CommandSender) })),
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Player), nameof(Player.Get), new System.Type[] { typeof(CommandSender) })),
                     new CodeInstruction(OpCodes.Ldarg_0),
                     new CodeInstruction(OpCodes.Ldc_I4_1),
                     new CodeInstruction(OpCodes.Newobj, AccessTools.GetDeclaredConstructors(typeof(SendingCommandEventArgs))[0]),
