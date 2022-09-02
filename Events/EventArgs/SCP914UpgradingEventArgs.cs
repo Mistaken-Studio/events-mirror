@@ -4,8 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Linq;
-using Exiled.API.Features;
 using Scp914;
 using UnityEngine;
 

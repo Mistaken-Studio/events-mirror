@@ -8,10 +8,7 @@
 
 using System.Collections.Generic;
 using System.Reflection.Emit;
-using Exiled.API.Features;
-using Exiled.API.Features.Items;
 using HarmonyLib;
-using InventorySystem.Items.Firearms.Attachments;
 using Mistaken.Events.EventArgs;
 using Mistaken.Events.Handlers;
 using NorthwoodLib.Pools;

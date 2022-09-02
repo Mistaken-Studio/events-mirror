@@ -9,7 +9,6 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using HarmonyLib;
-using InventorySystem.Items.Pickups;
 using InventorySystem.Searching;
 using Mistaken.Events.EventArgs;
 using Mistaken.Events.Handlers;

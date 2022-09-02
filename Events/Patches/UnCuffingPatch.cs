@@ -13,7 +13,6 @@ using System.Reflection.Emit;
 using Exiled.API.Features;
 using HarmonyLib;
 using InventorySystem.Disarming;
-using Mistaken.API.Extensions;
 using Mistaken.Events.EventArgs;
 using Mistaken.Events.Handlers;
 using NorthwoodLib.Pools;
